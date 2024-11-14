@@ -18,6 +18,9 @@ class WechatMessage(ChatMessage):
         notes_bot_join_group = ["邀请你", "invited you", "You've joined", "你通过扫描"]
         notes_exit_group = ["移出了群聊", "removed"]  # 可通过添加对应语言的踢出群聊通知中的关键词适配更多
         notes_patpat = ["拍了拍我", "tickled my", "tickled me"] # 可通过添加对应语言的拍一拍通知中的关键词适配更多
+        # 撤回消息
+        notes_revoke = ["撤回了一条消息", "revoked a message"]
+        
 
         if itchat_msg["Type"] == TEXT:
             self.ctype = ContextType.TEXT
@@ -30,6 +33,18 @@ class WechatMessage(ChatMessage):
             self.ctype = ContextType.IMAGE
             self.content = TmpDir().path() + itchat_msg["FileName"]  # content直接存临时目录路径
             self._prepare_fn = lambda: itchat_msg.download(self.content)
+        elif itchat_msg["Type"] == VIDEO and itchat_msg["MsgType"] == 43:
+            self.ctype = ContextType.VIDEO
+            self.content = TmpDir().path() + itchat_msg["FileName"]  # content直接存临时目录路径
+            self._prepare_fn = lambda: itchat_msg.download(self.content)
+        elif itchat_msg["Type"] == NOTE and itchat_msg["MsgType"] == 10002:
+            logger.debug("[AntiWithdrawal] 撤回消息: %s" % itchat_msg["Content"])
+            self.ctype = ContextType.REVOKE
+            self.content = itchat_msg["Content"]
+            if is_group:
+                self.actual_user_id = itchat_msg["ActualUserName"]
+                self.actual_user_nickname = itchat_msg["ActualNickName"]
+            
         elif itchat_msg["Type"] == NOTE and itchat_msg["MsgType"] == 10000:
             if is_group:
                 if any(note_bot_join_group in itchat_msg["Content"] for note_bot_join_group in notes_bot_join_group):  # 邀请机器人加入群聊
