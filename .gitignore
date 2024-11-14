@@ -4,7 +4,6 @@
 .venv
 .vs
 .wechaty/
-__pycache__/
 venv*
 *.pyc
 config.json
@@ -24,15 +23,10 @@ plugins/**/
 !plugins/tool
 !plugins/banwords
 !plugins/banwords/**/
-plugins/banwords/__pycache__
-plugins/banwords/lib/__pycache__
 !plugins/hello
 !plugins/role
 !plugins/keyword
 !plugins/linkai
 client_config.json
 /test
-__pycache__
-/plugins/revocation/__pycache__
-/plugins/plugin_summary/__pycache__
-**/*.pyc
+**/__pycache__/
