@@ -143,7 +143,12 @@ class PluginManager:
             if plugincls.enabled:
                 if 'GODCMD' in self.instances and name == 'GODCMD':
                     continue
-                # if name not in self.instances:
+                if name in self.instances:
+                    # 如果实例已存在，先移除旧的监听
+                    for event in self.instances[name].handlers:
+                        if event in self.listening_plugins and name in self.listening_plugins[event]:
+                            self.listening_plugins[event].remove(name)
+                    del self.instances[name]
                 try:
                     instance = plugincls()
                 except Exception as e:
