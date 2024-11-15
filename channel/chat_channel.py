@@ -227,6 +227,8 @@ class ChatChannel(Channel):
                 pass
             elif context.type == ContextType.FUNCTION or context.type == ContextType.FILE:  # 文件消息及函数调用等，当前无默认逻辑
                 pass
+            elif context.type == ContextType.VIDEO:  #视频消息
+                pass
             else:
                 logger.warning("[chat_channel] unknown context type: {}".format(context.type))
                 return

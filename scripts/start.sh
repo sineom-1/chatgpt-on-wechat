@@ -1,4 +1,14 @@
 #!/bin/bash
+###
+ # @Author: sineom h.sineom@gmail.com
+ # @Date: 2024-07-19 17:39:47
+ # @LastEditors: sineom h.sineom@gmail.com
+ # @LastEditTime: 2024-11-15 09:22:40
+ # @FilePath: /chatgpt-on-wechat/scripts/start.sh
+ # @Description: 
+ # 
+ # Copyright (c) 2024 by sineom, All Rights Reserved. 
+### 
 #后台运行Chat_on_webchat执行脚本
 
 cd `dirname $0`/..
