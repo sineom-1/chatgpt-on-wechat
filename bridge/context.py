@@ -1,3 +1,13 @@
+'''
+Author: sineom h.sineom@gmail.com
+Date: 2024-07-19 17:39:47
+LastEditors: sineom h.sineom@gmail.com
+LastEditTime: 2024-11-12 16:55:59
+FilePath: /chatgpt-on-wechat/bridge/context.py
+Description: 
+
+Copyright (c) 2024 by sineom, All Rights Reserved. 
+'''
 # encoding:utf-8
 
 from enum import Enum
@@ -17,7 +27,8 @@ class ContextType(Enum):
     PATPAT = 21  # 拍了拍
     FUNCTION = 22  # 函数调用
     EXIT_GROUP = 23 #退出
-
+    REVOKE = 24 # 撤回
+    
 
     def __str__(self):
         return self.name
