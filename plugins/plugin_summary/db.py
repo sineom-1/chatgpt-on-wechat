@@ -11,7 +11,9 @@ import datetime
 import os
 import sqlite3
 
-from common.log import logger
+# from common.log import logger
+
+import logging as logger
 
 
 class Db:
@@ -93,7 +95,7 @@ class Db:
         c.execute("UPDATE summary_time SET summary_time = ? WHERE sessionid = ?",
                   (summary_time, session_id))
         self.conn.commit()
-
+    
     # 获取总结时间，如果不存在返回None
     def get_summary_time(self, session_id):
         c = self.conn.cursor()
@@ -103,10 +105,37 @@ class Db:
             return None
         return row[0]
 
-    def get_records(self, session_id, start_timestamp=0, limit=9999) -> list:
+    def get_records(self, session_id, start_timestamp:int = None, limit:int = None, username: list[str]=None) -> list:
         c = self.conn.cursor()
-        c.execute("SELECT * FROM chat_records WHERE sessionid=? and timestamp>? ORDER BY timestamp DESC LIMIT ?",
-                  (session_id, start_timestamp, limit))
+        
+        # 构建基础SQL查询
+        sql = "SELECT * FROM chat_records WHERE sessionid=?"
+        params = [session_id]
+
+        # 添加时间筛选条件
+        if start_timestamp:
+            sql += " AND timestamp>?"
+            params.append(start_timestamp)
+        
+        # 添加用户名筛选条件
+        if username:
+            # 将搜索条件按@分割成多个用户名,并去掉@符号
+            sql += " AND ("
+            sql += " OR ".join(["user LIKE ?" for _ in username])
+            sql += ")"
+            params.extend(["%" + u + "%" for u in username])
+            # 如果没有指定limit，则根据用户数量设置limit
+            if limit is None:
+                limit = len(username) * 250
+
+        # 添加排序和限制条件
+        sql += " ORDER BY timestamp DESC"
+        if limit:
+            sql += " LIMIT ?"
+            params.append(limit)
+        print("[Db] sql: %s" % sql)
+        print("[Db] params: %s" % params)
+        c.execute(sql, params)
         return c.fetchall()
 
     # 删除禁用的群聊
@@ -136,3 +165,5 @@ class Db:
         c = self.conn.cursor()
         c.execute("SELECT sessionid FROM summary_stop")
         return set(c.fetchall())
+
+
