@@ -240,9 +240,11 @@ class Summary(Plugin):
             _send_info(e_context, "正在加速生成总结，请稍等")
             # 解析命令参数
             limit, duration, username = self._parse_summary_args(content)
-            
+            start_time = None
             # 生成总结
-            start_time = int(time.time()) - duration if duration > 0 else 0
+            if duration is not None:
+                start_time = int(time.time()) - duration if duration > 0 else 0
+                
             return self._generate_summary(session_id,start_time= start_time,limit= limit ,username=username)
             
         except Exception as e:
@@ -294,16 +296,14 @@ class Summary(Plugin):
             
             if command["name"].lower() == "summary":
                 args = command["args"]
-                limit = int(args.get("count", None))
-                # 获取消息数量限制
-                # limit = max(int(args.get("count", self.DEFAULT_LIMIT)), 0)
+                limit = args.get("count", None)
                 
                 # 获取时间范围(秒)
-                duration = args.get("duration_in_seconds", self.DEFAULT_DURATION)
-                if isinstance(duration, str):
-                    # 处理可能的时间字符串
-                    duration = int(float(duration))
-                duration = max(int(duration), 0) or self.DEFAULT_DURATION
+                duration = args.get("duration_in_seconds", None)
+                # if isinstance(duration, str):
+                #     # 处理可能的时间字符串
+                #     duration = int(float(duration))
+                # duration = max(int(duration), 0) or self.DEFAULT_DURATION
                 
                 logger.debug(f"[Summary] Parsed args: limit={limit}, duration={duration}, users={usernames}")
                 return limit, duration, usernames

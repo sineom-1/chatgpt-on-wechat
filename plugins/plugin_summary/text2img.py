@@ -2,7 +2,7 @@
 Author: sineom h.sineom@gmail.com
 Date: 2024-11-11 17:42:22
 LastEditors: sineom h.sineom@gmail.com
-LastEditTime: 2024-11-21 18:01:52
+LastEditTime: 2024-11-22 14:21:59
 FilePath: /chatgpt-on-wechat/plugins/plugin_summary/text2img.py
 Description: 
 
